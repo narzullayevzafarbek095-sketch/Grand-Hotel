@@ -1,0 +1,28 @@
+{
+  "name": "grand-hotel-fullstack",
+  "version": "1.0.0",
+  "description": "Grand Hotel — Zamonaviy va Hashamatli Mehmonxona Veb-sayti va Boshqaruv Tizimi",
+  "private": true,
+  "scripts": {
+    "start": "node server/server.js",
+    "server": "node server/server.js",
+    "client": "npm --prefix client run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "build": "npm --prefix client run build",
+    "install:all": "npm install && npm --prefix server install && npm --prefix client install"
+  },
+  "keywords": [
+    "grand-hotel",
+    "hotel-management",
+    "react",
+    "tailwind",
+    "express",
+    "postgresql",
+    "supabase"
+  ],
+  "author": "Grand Hotel Development Team",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

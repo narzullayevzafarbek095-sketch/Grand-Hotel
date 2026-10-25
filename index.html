@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="uz" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grand Hotel — Sizning qulayligingiz bizning ustuvor vazifamiz!</title>
+  <meta name="description" content="Grand Hotel — O‘zbekistonning 12 ta viloyatida 5 yulduzli hashamatli mehmonxonalar tarmog‘i. VIP xonalar, restoran va 24/7 xizmat.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23D4AF37'><path d='M2 19h20v2H2v-2zM4 10l5 3 3-5 3 5 5-3v7H4v-7z'/></svg>" />
+  
+  <!-- Google Fonts: Playfair Display & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: {
+              950: '#060B18',
+              900: '#0B132B',
+              850: '#111C38',
+              800: '#1C2541',
+              700: '#243254',
+            },
+            gold: {
+              100: '#FDF8EA',
+              200: '#FAF0D2',
+              300: '#F5E2B3',
+              400: '#E5C06E',
+              500: '#D4AF37',
+              600: '#B8860B',
+              700: '#996515',
+            }
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['"Outfit"', 'Inter', 'sans-serif'],
+          },
+          boxShadow: {
+            'gold-glow': '0 0 25px rgba(212, 175, 55, 0.25)',
+            'gold-glow-lg': '0 0 40px rgba(212, 175, 55, 0.4)',
+            'luxury': '0 20px 40px -15px rgba(0, 0, 0, 0.7)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- React 18 & Babel for Instant Native Browser Execution -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #060B18; }
+    ::-webkit-scrollbar-thumb { background: #1C2541; border-radius: 4px; border: 1px solid rgba(212, 175, 55, 0.3); }
+    ::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
+
+    .glass-panel {
+      background: rgba(17, 28, 56, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+    }
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #F5E2B3 0%, #D4AF37 50%, #B8860B 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gold-gradient-bg {
+      background: linear-gradient(135deg, #E5C06E 0%, #D4AF37 50%, #996515 100%);
+    }
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    .animate-float { animation: floatSlow 5s ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-navy-950 text-slate-100 font-sans selection:bg-gold-500 selection:text-navy-950 antialiased overflow-x-hidden">
+  
+  <div id="root"></div>
+
+  <!-- React Application Source -->
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // Vector SVG Icons Library (No emojis/stickers!)
+    const Icons = {
+      Crown: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>
+      ),
+      Star: ({ filled = true, className = "w-4 h-4 text-gold-400" }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      ),
+      Bed: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>
+      ),
+      Users: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      ),
+      Maximize: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg>
+      ),
+      Building: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>
+      ),
+      MapPin: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+      ),
+      Calendar: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+      ),
+      Phone: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      ),
+      Mail: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      ),
+      Shield: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      ),
+      Utensils: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"/><path d="M14 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+      ),
+      Wifi: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.86a10 10 0 0 1 14 0"/><path d="M8.5 16.43a5 5 0 0 1 7 0"/></svg>
+      ),
+      Waves: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg>
+      ),
+      Dumbbell: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6.5 6.5 11 11"/><path d="m21 21-1-1a3 3 0 0 0-4.24 0L15 20l-1-1a3 3 0 0 0-4.24 0l-5-5a3 3 0 0 0 0-4.24L5 9l-1-1a3 3 0 0 0 0-4.24l-1-1"/><path d="m18 10 1-1a3 3 0 0 0 0-4.24l-1-1"/></svg>
+      ),
+      Car: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+      ),
+      Plane: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+      ),
+      Clock: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      ),
+      Bell: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      ),
+      Check: ({ className = "w-4 h-4 text-gold-400" }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="20 6 9 17 4 12"/></svg>
+      ),
+      CheckCircle: ({ className = "w-5 h-5 text-emerald-400" }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      ),
+      ChevronLeft: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      ),
+      ChevronRight: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      ),
+      Trash: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      ),
+      Telegram: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8-1.57 7.41c-.12.53-.43.66-.88.41l-2.4-1.77-1.16 1.12c-.13.13-.24.24-.48.24l.17-2.46 4.48-4.05c.19-.17-.04-.27-.3-.09l-5.54 3.49-2.38-.75c-.52-.16-.53-.52.11-.77l9.31-3.59c.43-.16.81.1.66.76z"/></svg>
+      )
+    };
+
+    // 12 ta viloyat filiallari
+    const BRANCHES = [
+      { id: 'tashkent', region: 'Toshkent shahri', name: 'Grand Hotel Tashkent (Bosh bino)', city: 'Toshkent', address: 'Amir Temur shoh ko‘chasi, 88-uy', landmark: 'Amir Temur xiyoboni', phone: '+998 71 200 88 88', rating: 5.0, rooms: 150, img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80', desc: 'Poytaxt markazidagi 5 yulduzli flagman mehmonxona. Panoramali basseyn va xalqaro kongress zallari.' },
+      { id: 'samarkand', region: 'Samarqand viloyati', name: 'Grand Hotel Samarkand Regency', city: 'Samarqand', address: 'Universitet xiyoboni, 12-uy', landmark: 'Registon maydoniga 500m', phone: '+998 66 230 40 00', rating: 5.0, rooms: 120, img: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80', desc: 'Registon va Amir Temur maqbarasi yaqinidagi shohona sharqona saroy-mehmonxona.' },
+      { id: 'bukhara', region: 'Buxoro viloyati', name: 'Grand Hotel Bukhara Palace', city: 'Buxoro', address: 'Bahouddin Naqshband ko‘chasi, 45-uy', landmark: 'Labi Hovuz ansambli', phone: '+998 65 224 55 55', rating: 4.9, rooms: 95, img: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80', desc: 'Buxoro tarixiy markazida karvonsaroy uslubida qurilgan zamonaviy lyuks maskan.' },
+      { id: 'khiva', region: 'Xorazm viloyati (Xiva)', name: 'Grand Hotel Khiva Oasis', city: 'Xiva', address: 'Paxlavon Mahmud ko‘chasi, 7-uy', landmark: 'Ichan Qal‘a Ota Darvozasi', phone: '+998 62 375 88 00', rating: 4.9, rooms: 80, img: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80', desc: 'Ichan Qal‘a darvozasi ro‘parasidagi betakror manzarali terassalar va sharqona lutf.' },
+      { id: 'fergana', region: 'Farg‘ona viloyati', name: 'Grand Hotel Fergana Valley', city: 'Farg‘ona', address: 'Alisher Navoiy shoh ko‘chasi, 34-uy', landmark: 'Markaziy xiyobon', phone: '+998 73 244 11 22', rating: 4.8, rooms: 90, img: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80', desc: 'Farg‘ona vodiysining eng nufuzli biznes va dam olish majmuasi.' },
+      { id: 'andijan', region: 'Andijon viloyati', name: 'Grand Hotel Andijan', city: 'Andijon', address: 'Milliy tiklanish ko‘chasi, 18-uy', landmark: 'Bobur maydoni', phone: '+998 74 223 90 90', rating: 4.8, rooms: 85, img: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1200&q=80', desc: 'Ishbilarmonlar va sayohatchilar uchun qulay zamonaviy lyukslar.' },
+      { id: 'namangan', region: 'Namangan viloyati', name: 'Grand Hotel Namangan', city: 'Namangan', address: 'Islom Karimov ko‘chasi, 22-uy', landmark: 'Afsonalar vodiysi bog‘i', phone: '+998 69 227 33 44', rating: 4.8, rooms: 90, img: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=1200&q=80', desc: 'Afsonalar vodiysi yaqinidagi gullar shahri durdonasi.' },
+      { id: 'qarshi', region: 'Qashqadaryo viloyati (Qarshi)', name: 'Grand Hotel Qarshi Nasaf', city: 'Qarshi', address: 'Nasaf ko‘chasi, 15-uy', landmark: 'Qarshi ko‘prigi', phone: '+998 75 221 60 00', rating: 4.8, rooms: 75, img: 'https://images.unsplash.com/photo-1549294413-26f195200c16?auto=format&fit=crop&w=1200&q=80', desc: 'Qadimiy Nasaf zaminida yuqori sifatli 5 yulduzli servis.' },
+      { id: 'termez', region: 'Surxondaryo viloyati (Termiz)', name: 'Grand Hotel Termez Silk Road', city: 'Termiz', address: 'At-Termiziy ko‘chasi, 50-uy', landmark: 'Arxeologiya muzeyi', phone: '+998 76 228 12 12', rating: 4.8, rooms: 70, img: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80', desc: 'Buyuk Ipak yo‘li chorrahasidagi issiq janub gavhari.' },
+      { id: 'navoi', region: 'Navoiy viloyati', name: 'Grand Hotel Navoi', city: 'Navoiy', address: 'G‘alaba shoh ko‘chasi, 9-uy', landmark: 'Zarafshon bog‘i', phone: '+998 79 224 80 80', rating: 4.8, rooms: 80, img: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80', desc: 'Sanoat va iqtisodiy markaz mehmonlari uchun qulay biznes apartamentlar.' },
+      { id: 'jizzakh', region: 'Jizzax viloyati', name: 'Grand Hotel Jizzakh Zaamin', city: 'Jizzax', address: 'Sh. Rashidov ko‘chasi, 28-uy', landmark: 'Zomin tog‘lari yo‘li', phone: '+998 72 226 40 40', rating: 4.8, rooms: 70, img: 'https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=1200&q=80', desc: 'Zomin tog‘lari havosi va betakror tabiat manzarasi.' },
+      { id: 'guliston', region: 'Sirdaryo viloyati (Guliston)', name: 'Grand Hotel Guliston', city: 'Guliston', address: 'Do‘stlik ko‘chasi, 14-uy', landmark: 'Markaziy xiyobon', phone: '+998 67 225 15 15', rating: 4.7, rooms: 60, img: 'https://images.unsplash.com/photo-1590490359683-658d3d23f972?auto=format&fit=crop&w=1200&q=80', desc: 'Sirdaryo markazida sokin va qulay orom maskani.' },
+      { id: 'nukus', region: 'Qoraqalpog‘iston (Nukus)', name: 'Grand Hotel Nukus Savitsky', city: 'Nukus', address: 'Berdaq shoh ko‘chasi, 3-uy', landmark: 'Savitskiy san’at muzeyi', phone: '+998 61 222 77 00', rating: 4.8, rooms: 70, img: 'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1200&q=80', desc: 'Orolbo‘yi gavhari Nukusda san’at va 5 yulduzli qulaylik uyg‘unligi.' }
+    ];
+
+    // 4 xil xona — har birida 4 tadan yuqori sifatli rasmlar (yontarafga o'tib turadigan slider)
+    const ROOMS = [
+      {
+        id: 1,
+        name: 'Standard Xona',
+        type: 'standard',
+        price_per_night: 60,
+        capacity: 2,
+        size: '32 m²',
+        bed_type: '1 ta Queen-size kravat',
+        description: 'Zamonaviy va qulay dizayndagi shinam xona. Qulay dam olish va ish safari uchun ajoyib tanlov. Shahar manzarasi va barcha asosiy qulayliklar bilan jihozlangan.',
+        images: [
+          'https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1200&q=80',
+          'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80',
+          'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80',
+          'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1200&q=80'
+        ],
+        amenities: ['Yuqori tezlikdagi Wi-Fi', 'Konditsioner', 'Smart TV (4K)', 'Mini-bar', 'Xavfsiz seyf', 'Shinam vanna'],
+        is_available: true,
+        rating: 4.8
+      },
+      {
+        id: 2,
+        name: 'Deluxe Xona',
+        type: 'deluxe',
+        price_per_night: 110,
+        capacity: 3,
+        size: '48 m²',
+        bed_type: '1 ta King-size kravat + divan',
+        description: 'Kengaytirilgan maydon, hashamatli marmar qoplamalar va shahar panoramik manzarasi bilan ajralib turuvchi yuqori darajadagi xona. Orom va go‘zallik uyg‘unligi.',
+        images: [
+          'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80',
+          'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=80',
+          'https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=1200&q=80',
+          'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80'
+        ],
+        amenities: ['Balkon va shahar panoramasi', 'King-size qulay to‘shak', 'Nespresso kofe apparati', 'Marmar hammom & Jakuzi', 'Bepul premium nonushta', '24/7 xona xizmati'],
+        is_available: true,
+        rating: 4.9
+      },
+      {
+        id: 3,
+        name: 'VIP Prezident Suite',
+        type: 'vip',
+        price_per_night: 220,
+        capacity: 4,
+        size: '85 m²',
+        bed_type: '2 ta Super King-size kravat',
+        description: 'Grand Hotelning eng hashamatli xonasi. Alohida mehmonxona zali, shaxsiy jakuzi, oltin naqshli interyer va eksklyuziv VIP konsyerj xizmati bilan ta’minlangan.',
+        images: [
+          'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1200&q=80',
+          'https://images.unsplash.com/photo-1584622781564-1d987f7333c1?auto=format&fit=crop&w=1200&q=80',
+          'https://images.unsplash.com/photo-1590490359683-658d3d23f972?auto=format&fit=crop&w=1200&q=80',
+          'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80'
+        ],
+        amenities: ['Shaxsiy terassa', 'VIP Aeroport transferi', 'Shaxsiy shveysar & konsyerj', 'Jakuzi & fin saunasi', 'To‘liq bar va sharob to‘plami', 'Cheklanmagan SPA xizmatlari'],
+        is_available: true,
+        rating: 5.0
+      },
+      {
+        id: 4,
+        name: 'Family Oila Xonasi',
+        type: 'family',
+        price_per_night: 160,
+        capacity: 5,
+        size: '68 m²',
+        bed_type: '2 ta Katta ikki kishilik kravat',
+        description: 'Butun oila bilan qulay va xavfsiz hordiq chiqarish uchun maxsus loyihalashtirilgan ikki xonali keng lyuks xona. Bolalar uchun maxsus qulayliklar mavjud.',
+        images: [
+          'https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=1200&q=80',
+          'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=1200&q=80',
+          'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+          'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=1200&q=80'
+        ],
+        amenities: ['2 ta alohida yotoqxona', 'Bolalar o‘yin burchagi', 'Katta muzlatgich va oshxona maydoni', 'Oila uchun bepul nonushta', 'Bolalar uchun xavfsiz vanna', 'Smart ko‘ngilochar tizim'],
+        is_available: true,
+        rating: 4.9
+      }
+    ];
+
+    const SERVICES = [
+      { id: 'restaurant', title: 'Restoran va nonushta', desc: 'Har kuni ertalabki sarxil shved stoli va kun bo‘yi milliy hamda xalqaro taomlar.', icon: Icons.Utensils, tag: 'Shved stoli bepul' },
+      { id: 'wifi', title: 'Bepul Wi-Fi', desc: 'Barcha xonalar va mehmonxona bo‘ylab 500 Mbit/s gacha bo‘lgan ultra-tezkor internet.', icon: Icons.Wifi, tag: '500 Mbit/s tezlik' },
+      { id: 'pool', title: 'Panoramali Basseyn', desc: 'Yopiq isitiladigan va ochiq quyoshli terassali moviy panoramik basseyn majmuasi.', icon: Icons.Waves, tag: 'Harorat nazorati' },
+      { id: 'gym', title: 'Sport zali & Fitnes', desc: 'Eng so‘nggi TechnoGym trenajyorlari, kardio zonasi va shaxsiy instruktorlar.', icon: Icons.Dumbbell, tag: '24/7 ochiq' },
+      { id: 'parking', title: 'Avtoturargoh', desc: 'Video-kuzatuv ostidagi yer osti qo‘riqlanadigan bepul keng avtoturargoh.', icon: Icons.Car, tag: '24/7 qo‘riqlash' },
+      { id: 'airport', title: 'Aeroportdan kutib olish', desc: 'Toshkent va viloyatlar aeroportlaridan qulay transfer va VIP kutib olish.', icon: Icons.Plane, tag: 'VIP Mercedes' },
+      { id: 'reception', title: '24/7 Resepshn', desc: 'Har qanday savol va istaklaringizni kechayu-kunduz hal qiluvchi xushmuomala xodimlar.', icon: Icons.Clock, tag: '24/7 xizmat' },
+      { id: 'room-service', title: 'Xonaga ovqat yetkazish', desc: '24 soat davomida sevimli taom va ichimliklaringizni to‘g‘ridan-to‘g‘ri xonangizga yetkazish.', icon: Icons.Bell, tag: 'Tezkor yetkazish' },
+    ];
+
+    const RESTAURANT_MENU = [
+      { id: 1, name: "Maxsus To‘y Oshi (Palov)", price: 85000, time: '20 daq', desc: "Lazer guruchi, sarxil barra qo‘zi go‘shti, qazi, bedana tuxumi va mayiz bilan damlangan milliy durdona.", img: 'https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?auto=format&fit=crop&w=800&q=80', special: true },
+      { id: 2, name: 'Tandir Somsa Assorti', price: 45000, time: '15 daq', desc: "Tandirda pishirilgan qarsildoq xamirli, shirador mayin go‘sht va piyozli 3 xil somsa to‘plami.", img: 'https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=800&q=80', special: false },
+      { id: 3, name: 'Qozon Kabob (Grand Style)', price: 98000, time: '25 daq', desc: "Qizargan mayin yosh qo‘zi go‘shti, tillarang qovurilgan kartoshka va sarxil piyoz garniri.", img: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80', special: true },
+      { id: 4, name: "Norveg Salmon Steyki", price: 145000, time: '25 daq', desc: "Grilda pishirilgan barra qizil baliq filesi, parhezbop sarsabil va kremli limonli sous.", img: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=800&q=80', special: true },
+      { id: 5, name: 'Black Angus Ribeye Steyki', price: 195000, time: '30 daq', desc: "Oliy navli marmar mol go‘shti, olovda qovurilgan sabzavotlar va demi-glas sousi.", img: 'https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=800&q=80', special: true },
+      { id: 6, name: 'Klassik Sezar Salati', price: 75000, time: '15 daq', desc: "Qarsildoq aysberg barglari, yirik qirollik krevetkalari, parmezan va maxsus sous.", img: 'https://images.unsplash.com/photo-1550304943-4f24f54ddde9?auto=format&fit=crop&w=800&q=80', special: false },
+      { id: 7, name: 'Italyancha Tiramisu', price: 45000, time: '10 daq', desc: "Haqiqiy Maskarpone kremi, espressoga botirilgan Savoiardi va kakao bilan nozik desert.", img: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&w=800&q=80', special: false },
+      { id: 8, name: 'Grand Signature Kokteyli', price: 40000, time: '5 daq', desc: "Sarxil mevalar, yalpiz, laym va tabiiy sharbatlardan tetiklantiruvchi ichimlik.", img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=800&q=80', special: true },
+    ];
+
+    // Single Room Card with Horizontal Auto-Slider
+    function RoomCardItem({ room, onBook }) {
+      const [imgIdx, setImgIdx] = useState(0);
+      const [isHover, setIsHover] = useState(false);
+      const images = room.images || [room.image_url];
+
+      // Auto-slide horizontally every 4.5 seconds
+      useEffect(() => {
+        if (isHover || images.length <= 1) return;
+        const t = setInterval(() => {
+          setImgIdx((prev) => (prev + 1) % images.length);
+        }, 4500);
+        return () => clearInterval(t);
+      }, [isHover, images.length]);
+
+      return (
+        <div 
+          onMouseEnter={() => setIsHover(true)}
+          onMouseLeave={() => setIsHover(false)}
+          className={`rounded-2xl overflow-hidden glass-panel flex flex-col justify-between border border-slate-800 hover:border-gold-500/50 transition-all duration-300 group ${room.type === 'vip' ? 'ring-2 ring-gold-500/40 shadow-gold-glow' : ''}`}
+        >
+          {/* Horizontal Image Slider */}
+          <div className="relative h-64 overflow-hidden select-none bg-navy-950">
+            <div 
+              className="flex h-full w-full transition-transform duration-500 ease-out"
+              style={{ transform: `translateX(-${imgIdx * 100}%)` }}
+            >
+              {images.map((im, i) => (
+                <div key={i} className="min-w-full h-full relative shrink-0">
+                  <img src={im} alt={`${room.name} ${i+1}`} className="w-full h-full object-cover" />
+                </div>
+              ))}
+            </div>
+
+            <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-transparent to-black/30 pointer-events-none"></div>
+
+            {/* Slider Arrows */}
+            {images.length > 1 && (
+              <>
+                <button
+                  onClick={(e) => { e.stopPropagation(); setImgIdx((prev) => (prev === 0 ? images.length - 1 : prev - 1)); }}
+                  className="absolute left-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-navy-950/70 hover:bg-gold-500 hover:text-navy-950 text-white backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all border border-slate-700"
+                >
+                  <Icons.ChevronLeft />
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); setImgIdx((prev) => (prev + 1) % images.length); }}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-navy-950/70 hover:bg-gold-500 hover:text-navy-950 text-white backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all border border-slate-700"
+                >
+                  <Icons.ChevronRight />
+                </button>
+              </>
+            )}
+
+            {/* Slider Dots */}
+            {images.length > 1 && (
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
+                {images.map((_, dotI) => (
+                  <button
+                    key={dotI}
+                    onClick={() => setImgIdx(dotI)}
+                    className={`transition-all rounded-full ${imgIdx === dotI ? 'w-4 h-1.5 bg-gold-400' : 'w-1.5 h-1.5 bg-white/50'}`}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Badges */}
+            <div className="absolute top-3 left-3 z-10 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider gold-gradient-bg text-navy-950 flex items-center gap-1">
+              {room.type === 'vip' && <Icons.Crown />}
+              <span>{room.type}</span>
+            </div>
+
+            <div className="absolute top-3 right-3 z-10 bg-navy-950/80 px-2.5 py-1 rounded-full text-xs font-bold text-white border border-slate-700 flex items-center gap-1">
+              <Icons.Star className="w-3.5 h-3.5 text-gold-400" />
+              <span>{room.rating}</span>
+            </div>
+
+            <div className="absolute bottom-3 right-3 z-10 bg-navy-950/90 px-3 py-1 rounded-xl border border-gold-500/30 text-right">
+              <div className="text-[10px] text-slate-400">Bir kecha:</div>
+              <div className="text-xl font-bold font-serif gold-gradient-text leading-none mt-0.5">${room.price_per_night}</div>
+            </div>
+          </div>
+
+          {/* Details */}
+          <div className="p-5 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 className="text-xl font-serif font-bold text-white mb-2">{room.name}</h3>
+              <div className="flex items-center gap-4 text-xs text-slate-300 mb-3 border-y border-slate-800 py-2">
+                <span className="flex items-center gap-1.5"><Icons.Users /> {room.capacity} kishi</span>
+                <span className="flex items-center gap-1.5"><Icons.Maximize /> {room.size}</span>
+                <span className="flex items-center gap-1.5"><Icons.Bed /> {room.bed_type}</span>
+              </div>
+              <p className="text-xs text-slate-400 line-clamp-2 mb-4 leading-relaxed">{room.description}</p>
+              <div className="space-y-1.5 mb-5">
+                {room.amenities.slice(0, 3).map((a, i) => (
+                  <div key={i} className="text-xs text-slate-300 flex items-center gap-2">
+                    <Icons.Check className="w-3.5 h-3.5 text-gold-400 shrink-0" />
+                    <span>{a}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button
+              onClick={() => onBook(room)}
+              disabled={!room.is_available}
+              className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all ${
+                room.is_available
+                  ? 'gold-gradient-bg text-navy-950 shadow-gold-glow hover:shadow-gold-glow-lg'
+                  : 'bg-slate-800 text-slate-500 cursor-not-allowed'
+              }`}
+            >
+              {room.is_available ? `Band qilish ($${room.price_per_night})` : 'Band qilingan'}
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    // Main App Component
+    function GrandHotelApp() {
+      const [view, setView] = useState('home');
+      const [selectedRegionFilter, setSelectedRegionFilter] = useState('all');
+      const [rooms, setRooms] = useState(() => {
+        const saved = localStorage.getItem('gh_rooms');
+        return saved ? JSON.parse(saved) : ROOMS;
+      });
+      const [bookings, setBookings] = useState(() => {
+        const saved = localStorage.getItem('gh_bookings');
+        return saved ? JSON.parse(saved) : [
+          { id: 1, booking_code: 'GH-89241', branch_name: 'Grand Hotel Tashkent', room_name: 'VIP Prezident Suite', guest_name: 'Alisher Qodirov', guest_phone: '+998 90 123 45 67', check_in: '2026-10-28', check_out: '2026-11-02', nights: 5, guests_count: 2, price_per_night: 220, total_price: 1100, status: 'tasdiqlangan' },
+          { id: 2, booking_code: 'GH-45129', branch_name: 'Grand Hotel Samarkand', room_name: 'Deluxe Xona', guest_name: 'Dilnoza Karimova', guest_phone: '+998 97 765 43 21', check_in: '2026-10-26', check_out: '2026-10-29', nights: 3, guests_count: 2, price_per_night: 110, total_price: 330, status: 'kutilmoqda' }
+        ];
+      });
+      const [contacts, setContacts] = useState(() => {
+        const saved = localStorage.getItem('gh_contacts');
+        return saved ? JSON.parse(saved) : [];
+      });
+
+      // Modals
+      const [isBookingOpen, setIsBookingOpen] = useState(false);
+      const [bookingInitialData, setBookingInitialData] = useState(null);
+      const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
+      const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => !!localStorage.getItem('gh_admin_session'));
+      const [toast, setToast] = useState(null);
+
+      useEffect(() => { localStorage.setItem('gh_rooms', JSON.stringify(rooms)); }, [rooms]);
+      useEffect(() => { localStorage.setItem('gh_bookings', JSON.stringify(bookings)); }, [bookings]);
+      useEffect(() => { localStorage.setItem('gh_contacts', JSON.stringify(contacts)); }, [contacts]);
+
+      const showToast = (message, type = 'info') => {
+        setToast({ message, type });
+        setTimeout(() => setToast(null), 4000);
+      };
+
+      const handleOpenBooking = (branchOrRoomOrSearch = null) => {
+        setBookingInitialData(branchOrRoomOrSearch);
+        setIsBookingOpen(true);
+      };
+
+      const handleCreateBooking = (newBooking) => {
+        setBookings(prev => [newBooking, ...prev]);
+        showToast(`Xona muvaffaqiyatli band qilindi! Kod: ${newBooking.booking_code}`, 'success');
+      };
+
+      const filteredBranches = selectedRegionFilter === 'all'
+        ? BRANCHES
+        : BRANCHES.filter(b => b.id === selectedRegionFilter);
+
+      return (
+        <div className="min-h-screen bg-navy-950 text-slate-100 flex flex-col font-sans selection:bg-gold-500 selection:text-navy-950">
+          
+          {/* Header */}
+          <header className="fixed top-0 left-0 right-0 z-40 bg-navy-950/90 backdrop-blur-md border-b border-gold-500/20 py-3.5 px-4 sm:px-8">
+            <div className="max-w-7xl mx-auto flex items-center justify-between">
+              
+              <a href="#home" onClick={() => setView('home')} className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-navy-950 shadow-gold-glow font-bold">
+                  <Icons.Crown />
+                </div>
+                <div>
+                  <span className="text-xl sm:text-2xl font-serif font-bold gold-gradient-text block leading-none">
+                    GRAND HOTEL
+                  </span>
+                  <span className="text-[10px] uppercase tracking-widest text-slate-400 font-medium">
+                    12 Viloyatda • 5 Yulduzli Mehmonxonalar
+                  </span>
+                </div>
+              </a>
+
+              {/* Navigation */}
+              {view === 'home' && (
+                <nav className="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-300">
+                  <a href="#home" className="hover:text-gold-400 transition-colors">Bosh sahifa</a>
+                  <a href="#branches" className="hover:text-gold-400 transition-colors text-gold-300 font-semibold">12 Viloyat Filiallari</a>
+                  <a href="#rooms" className="hover:text-gold-400 transition-colors">Xonalar</a>
+                  <a href="#services" className="hover:text-gold-400 transition-colors">Xizmatlar</a>
+                  <a href="#restaurant" className="hover:text-gold-400 transition-colors">Restoran</a>
+                  <a href="#about" className="hover:text-gold-400 transition-colors">Biz haqimizda</a>
+                  <a href="#contact" className="hover:text-gold-400 transition-colors">Aloqa</a>
+                </nav>
+              )}
+
+              {/* Actions */}
+              <div className="flex items-center gap-3">
+                {isAdminAuthenticated ? (
+                  <button
+                    onClick={() => setView(view === 'admin' ? 'home' : 'admin')}
+                    className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-gold-500/10 text-gold-400 border border-gold-500/30 hover:bg-gold-500/20 transition-all flex items-center gap-1.5"
+                  >
+                    <Icons.Shield />
+                    <span>{view === 'admin' ? 'Saytga qaytish' : 'Admin Panel'}</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setIsAdminLoginOpen(true)}
+                    className="text-xs text-slate-400 hover:text-gold-400 transition-colors px-2 py-1 flex items-center gap-1"
+                  >
+                    <Icons.Shield />
+                    <span>Admin</span>
+                  </button>
+                )}
+
+                <button
+                  onClick={() => handleOpenBooking()}
+                  className="px-4 sm:px-5 py-2 rounded-full gold-gradient-bg text-navy-950 font-bold text-xs sm:text-sm shadow-gold-glow hover:shadow-gold-glow-lg transition-all"
+                >
+                  Xona band qilish
+                </button>
+              </div>
+
+            </div>
+          </header>
+
+          {/* Body Switch */}
+          {view === 'admin' ? (
+            <AdminView
+              bookings={bookings}
+              setBookings={setBookings}
+              rooms={rooms}
+              setRooms={setRooms}
+              contacts={contacts}
+              onBack={() => setView('home')}
+              onLogout={() => {
+                localStorage.removeItem('gh_admin_session');
+                setIsAdminAuthenticated(false);
+                setView('home');
+                showToast('Administrator sessiyasi yakunlandi', 'info');
+              }}
+              showToast={showToast}
+            />
+          ) : (
+            <main className="flex-1 pt-16">
+              
+              {/* Hero Section */}
+              <section id="home" className="relative min-h-[92vh] flex items-center justify-center pt-16 pb-20 px-4 sm:px-8 text-center overflow-hidden">
+                <div className="absolute inset-0 z-0">
+                  <img
+                    src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=2000&q=85"
+                    alt="Grand Hotel Facade"
+                    className="w-full h-full object-cover filter brightness-[0.38]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/60 to-transparent"></div>
+                </div>
+
+                <div className="relative z-10 max-w-5xl mx-auto space-y-6 pt-10">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-navy-900/80 border border-gold-500/40 text-gold-300 text-xs font-semibold uppercase tracking-widest animate-float">
+                    <Icons.Star />
+                    <span>5 Yulduzli Mehmonxonalar Tarmog‘i • 12 Ta Viloyatda</span>
+                  </div>
+
+                  <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-white leading-tight">
+                    Grand Hotel — <span className="gold-gradient-text">Sizning qulayligingiz bizning ustuvor vazifamiz!</span>
+                  </h1>
+
+                  <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto font-light leading-relaxed">
+                    Toshkent, Samarqand, Buxoro, Xiva va butun O‘zbekiston viloyatlarida sharqona mehmondo‘stlik, shohona xonalar va 24/7 shaxsiy xizmat.
+                  </p>
+
+                  <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+                    <button
+                      onClick={() => handleOpenBooking()}
+                      className="px-8 py-4 rounded-full gold-gradient-bg text-navy-950 font-bold text-base shadow-gold-glow hover:shadow-gold-glow-lg transition-all transform hover:-translate-y-1 flex items-center gap-2"
+                    >
+                      <Icons.Crown />
+                      <span>Xona band qilish</span>
+                    </button>
+                    <a
+                      href="#branches"
+                      className="px-7 py-4 rounded-full bg-navy-900/90 text-gold-400 border border-gold-500/40 hover:bg-gold-500 hover:text-navy-950 font-semibold text-sm transition-all flex items-center gap-2 shadow-md"
+                    >
+                      <Icons.Building />
+                      <span>12 ta viloyat filiallari</span>
+                    </a>
+                    <a
+                      href="#rooms"
+                      className="px-7 py-4 rounded-full bg-navy-900/80 text-slate-200 border border-slate-700 hover:border-gold-500 hover:text-gold-400 font-semibold text-sm transition-all"
+                    >
+                      Xonalar va narxlar
+                    </a>
+                  </div>
+
+                  {/* Quick Search Card with Branch Selector */}
+                  <div className="mt-12 glass-panel p-5 rounded-2xl border border-gold-500/30 shadow-luxury max-w-5xl mx-auto">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 text-left">
+                      <div className="bg-navy-900/80 p-3 rounded-xl border border-slate-700">
+                        <label className="text-[10px] uppercase font-bold text-gold-400 block mb-1 flex items-center gap-1"><Icons.MapPin /> Viloyat / Filial</label>
+                        <select id="hero-branch" className="w-full bg-transparent text-xs text-white font-medium focus:outline-none">
+                          {BRANCHES.map(b => (
+                            <option key={b.id} value={b.id} className="bg-navy-900">{b.city} ({b.region})</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="bg-navy-900/80 p-3 rounded-xl border border-slate-700">
+                        <label className="text-[10px] uppercase font-bold text-gold-400 block mb-1 flex items-center gap-1"><Icons.Calendar /> Kirish sanasi</label>
+                        <input id="hero-checkin" type="date" defaultValue={new Date().toISOString().split('T')[0]} className="w-full bg-transparent text-xs text-white font-medium focus:outline-none" />
+                      </div>
+
+                      <div className="bg-navy-900/80 p-3 rounded-xl border border-slate-700">
+                        <label className="text-[10px] uppercase font-bold text-gold-400 block mb-1 flex items-center gap-1"><Icons.Calendar /> Chiqish sanasi</label>
+                        <input id="hero-checkout" type="date" defaultValue={new Date(Date.now() + 86400000).toISOString().split('T')[0]} className="w-full bg-transparent text-xs text-white font-medium focus:outline-none" />
+                      </div>
+
+                      <div className="bg-navy-900/80 p-3 rounded-xl border border-slate-700">
+                        <label className="text-[10px] uppercase font-bold text-gold-400 block mb-1 flex items-center gap-1"><Icons.Bed /> Xona turi</label>
+                        <select id="hero-room" className="w-full bg-transparent text-xs text-white font-medium focus:outline-none">
+                          <option value="standard" className="bg-navy-900">Standard ($60)</option>
+                          <option value="deluxe" className="bg-navy-900">Deluxe ($110)</option>
+                          <option value="vip" className="bg-navy-900">VIP Suite ($220)</option>
+                          <option value="family" className="bg-navy-900">Family ($160)</option>
+                        </select>
+                      </div>
+
+                      <button
+                        onClick={() => {
+                          const bid = document.getElementById('hero-branch').value;
+                          const cin = document.getElementById('hero-checkin').value;
+                          const cout = document.getElementById('hero-checkout').value;
+                          const rtype = document.getElementById('hero-room').value;
+                          handleOpenBooking({ branchId: bid, checkIn: cin, checkOut: cout, roomType: rtype });
+                        }}
+                        className="w-full h-full min-h-[48px] rounded-xl gold-gradient-bg text-navy-950 font-bold text-xs shadow-gold-glow hover:shadow-gold-glow-lg transition-all flex items-center justify-center gap-1"
+                      >
+                        Tekshirish & Band qilish
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Highlights Under Hero */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto pt-8 text-left">
+                    <div className="p-3.5 rounded-xl bg-navy-900/50 border border-slate-800 flex items-center gap-3">
+                      <div className="p-2.5 rounded-lg bg-gold-500/10 text-gold-400"><Icons.Building /></div>
+                      <div><div className="font-bold text-white text-sm">12 Viloyatda</div><div className="text-[11px] text-slate-400">Butun O‘zbekiston</div></div>
+                    </div>
+                    <div className="p-3.5 rounded-xl bg-navy-900/50 border border-slate-800 flex items-center gap-3">
+                      <div className="p-2.5 rounded-lg bg-gold-500/10 text-gold-400"><Icons.Bed /></div>
+                      <div><div className="font-bold text-white text-sm">1200+ Xona</div><div className="text-[11px] text-slate-400">Umumiy mehmonxona fondi</div></div>
+                    </div>
+                    <div className="p-3.5 rounded-xl bg-navy-900/50 border border-slate-800 flex items-center gap-3">
+                      <div className="p-2.5 rounded-lg bg-gold-500/10 text-gold-400"><Icons.Clock /></div>
+                      <div><div className="font-bold text-white text-sm">24/7 Xizmat</div><div className="text-[11px] text-slate-400">Shaxsiy konsyerj</div></div>
+                    </div>
+                    <div className="p-3.5 rounded-xl bg-navy-900/50 border border-slate-800 flex items-center gap-3">
+                      <div className="p-2.5 rounded-lg bg-gold-500/10 text-gold-400"><Icons.Star /></div>
+                      <div><div className="font-bold text-white text-sm">99.8% Mamnun</div><div className="text-[11px] text-slate-400">Xalqaro daraja</div></div>
+                    </div>
+                  </div>
+
+                </div>
+              </section>
+
+              {/* 12 VILOYATDA GRAND HOTEL FILIALLARI */}
+              <section id="branches" className="py-24 px-4 sm:px-8 max-w-7xl mx-auto border-t border-gold-500/20">
+                <div className="text-center max-w-3xl mx-auto mb-14">
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gold-500/10 border border-gold-500/30 text-gold-400 text-xs font-semibold uppercase tracking-widest mb-3">
+                    <Icons.Building />
+                    <span>O‘zbekiston Bo‘ylab 12 Ta Viloyatda</span>
+                  </div>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-3">
+                    Grand Hotel Mehmonxonalar Tarmog‘i
+                  </h2>
+                  <p className="text-sm sm:text-base text-slate-400">
+                    Toshkent, Samarqand, Buxoro, Xiva va O‘zbekistonning barcha 12 ta viloyatida yagona 5 yulduzli standart.
+                  </p>
+
+                  {/* Region Filter Chips */}
+                  <div className="flex flex-wrap items-center justify-center gap-2 mt-8">
+                    <button
+                      onClick={() => setSelectedRegionFilter('all')}
+                      className={`px-4 py-2 rounded-full text-xs font-semibold transition-all ${selectedRegionFilter === 'all' ? 'gold-gradient-bg text-navy-950 font-bold shadow-gold-glow' : 'bg-navy-900 text-slate-300'}`}
+                    >
+                      Barchasi ({BRANCHES.length} ta)
+                    </button>
+                    {BRANCHES.map(b => (
+                      <button
+                        key={b.id}
+                        onClick={() => setSelectedRegionFilter(b.id)}
+                        className={`px-3 py-1.5 rounded-full text-xs transition-all ${selectedRegionFilter === b.id ? 'gold-gradient-bg text-navy-950 font-bold shadow-gold-glow' : 'bg-navy-900/60 text-slate-400 hover:text-white'}`}
+                      >
+                        {b.city}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+                  {filteredBranches.map(b => (
+                    <div key={b.id} className="rounded-3xl overflow-hidden glass-panel border border-slate-800 hover:border-gold-500/40 flex flex-col justify-between transition-all duration-300 group">
+                      <div>
+                        <div className="relative h-56 overflow-hidden">
+                          <img src={b.img} alt={b.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                          <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-bold uppercase gold-gradient-bg text-navy-950 flex items-center gap-1 shadow-md">
+                            <Icons.MapPin />
+                            <span>{b.region}</span>
+                          </div>
+                          <div className="absolute top-3 right-3 bg-navy-950/80 px-2.5 py-1 rounded-full text-xs font-bold text-white flex items-center gap-1 border border-slate-700">
+                            <Icons.Star className="w-3.5 h-3.5 text-gold-400" />
+                            <span>{b.rating}</span>
+                          </div>
+                          <div className="absolute bottom-3 left-3 bg-navy-950/90 px-3 py-1 rounded-xl text-xs text-slate-300 flex items-center gap-1 border border-slate-800">
+                            <Icons.Bed />
+                            <span>{b.rooms} ta xona</span>
+                          </div>
+                        </div>
+
+                        <div className="p-5">
+                          <h3 className="text-xl font-serif font-bold text-white mb-2 group-hover:text-gold-400 transition-colors">{b.name}</h3>
+                          <p className="text-xs text-slate-400 mb-4 line-clamp-2 leading-relaxed">{b.desc}</p>
+                          <div className="space-y-1.5 text-xs text-slate-300 border-t border-slate-800/80 pt-3">
+                            <div className="flex items-center gap-2"><Icons.MapPin /> <span>{b.address}</span></div>
+                            <div className="flex items-center gap-2 text-gold-300"><Icons.Building /> <span>{b.landmark}</span></div>
+                            <div className="flex items-center gap-2"><Icons.Phone /> <a href={`tel:${b.phone}`} className="hover:text-gold-400">{b.phone}</a></div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="p-5 pt-0">
+                        <button
+                          onClick={() => handleOpenBooking({ branchId: b.id })}
+                          className="w-full py-2.5 rounded-xl gold-gradient-bg text-navy-950 font-bold text-xs uppercase tracking-wider shadow-gold-glow hover:shadow-gold-glow-lg transition-all flex items-center justify-center gap-1"
+                        >
+                          <span>Ushbu filialda xona band qilish</span>
+                          <Icons.ChevronRight />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* Rooms Section (with Sideways Auto-Slider) */}
+              <section id="rooms" className="py-24 px-4 sm:px-8 max-w-7xl mx-auto border-t border-gold-500/10">
+                <div className="text-center max-w-2xl mx-auto mb-14">
+                  <span className="text-xs font-bold uppercase tracking-widest text-gold-400 block mb-2">Xonalar & Narxlar</span>
+                  <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-3">Hashamatli Xonalar To‘plami</h2>
+                  <p className="text-sm text-slate-400">Har bir xona rasmlari avtomatik yontarafga o‘tib turadi. O‘zingizga ma’qulini tanlang.</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {rooms.map((room) => (
+                    <RoomCardItem
+                      key={room.id}
+                      room={room}
+                      onBook={handleOpenBooking}
+                    />
+                  ))}
+                </div>
+              </section>
+
+              {/* Services Section */}
+              <section id="services" className="py-24 px-4 sm:px-8 bg-navy-900/50 border-t border-gold-500/10">
+                <div className="max-w-7xl mx-auto">
+                  <div className="text-center max-w-2xl mx-auto mb-16">
+                    <span className="text-xs font-bold uppercase tracking-widest text-gold-400 block mb-2">Mehmonxona Imtiyozlari</span>
+                    <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-3">5 Yulduzli Qulayliklar va Xizmatlar</h2>
+                    <p className="text-sm text-slate-400">Sizning unutilmas hordiqlaringiz uchun 8 xil asosiy premium servis.</p>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {SERVICES.map((s) => {
+                      const IconComp = s.icon;
+                      return (
+                        <div key={s.id} className="p-6 rounded-2xl glass-panel border border-slate-800 hover:border-gold-500/40 transition-all">
+                          <div className="mb-4 p-3 w-14 h-14 rounded-2xl bg-navy-950 border border-gold-500/30 flex items-center justify-center text-gold-400 shadow-md">
+                            <IconComp />
+                          </div>
+                          <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-gold-500/10 text-gold-300 border border-gold-500/20 mb-2">
+                            {s.tag}
+                          </span>
+                          <h3 className="text-lg font-serif font-bold text-white mb-2">{s.title}</h3>
+                          <p className="text-xs text-slate-400 leading-relaxed">{s.desc}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </section>
+
+              {/* Restaurant Section */}
+              <section id="restaurant" className="py-24 px-4 sm:px-8 max-w-7xl mx-auto">
+                <div className="text-center max-w-2xl mx-auto mb-14">
+                  <span className="text-xs font-bold uppercase tracking-widest text-gold-400 block mb-2">Grand Gourmet Restorani</span>
+                  <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-3">Milliy va Xalqaro Taomlar Menyusi</h2>
+                  <p className="text-sm text-slate-400">Toshkent to‘y oshi, tandir somsa, qozon kabob va xalqaro steiklar.</p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {RESTAURANT_MENU.map((item) => (
+                    <div key={item.id} className="rounded-2xl overflow-hidden glass-panel border border-slate-800 flex flex-col justify-between group">
+                      <div className="relative h-48 overflow-hidden">
+                        <img src={item.img} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                        {item.special && (
+                          <span className="absolute top-3 left-3 px-2 py-0.5 rounded-full text-[10px] font-bold gold-gradient-bg text-navy-950">
+                            Chef Tavsiyasi
+                          </span>
+                        )}
+                        <span className="absolute top-3 right-3 bg-navy-950/80 px-2 py-0.5 rounded-full text-[10px] text-slate-300">
+                          {item.time}
+                        </span>
+                        <div className="absolute bottom-3 right-3 bg-navy-950/90 px-3 py-1 rounded-xl border border-gold-500/30 text-sm font-bold font-serif gold-gradient-text">
+                          {item.price.toLocaleString('uz-UZ')} so‘m
+                        </div>
+                      </div>
+                      <div className="p-4 flex-1 flex flex-col justify-between">
+                        <div>
+                          <h4 className="font-serif font-bold text-base text-white mb-1">{item.name}</h4>
+                          <p className="text-xs text-slate-400 line-clamp-2 mb-3">{item.desc}</p>
+                        </div>
+                        <button
+                          onClick={() => showToast(`"${item.name}" buyurtmangiz qabul qilindi!`, 'success')}
+                          className="w-full py-2 rounded-xl bg-navy-800 hover:bg-gold-500 hover:text-navy-950 text-gold-300 border border-gold-500/30 text-xs font-bold transition-all"
+                        >
+                          Xonaga buyurtma berish
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* About Section */}
+              <section id="about" className="py-24 px-4 sm:px-8 bg-navy-900/40">
+                <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                  <div className="relative">
+                    <img
+                      src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80"
+                      alt="Grand Hotel Lobby"
+                      className="rounded-3xl shadow-2xl border border-gold-500/30 w-full h-[400px] object-cover"
+                    />
+                  </div>
+                  <div className="space-y-4">
+                    <span className="text-xs font-bold uppercase tracking-widest text-gold-400">Biz haqimizda</span>
+                    <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white">Sizning qulayligingiz — bizning faxrimiz</h2>
+                    <p className="text-slate-300 text-sm leading-relaxed">
+                      Grand Hotel — O‘zbekiston Respublikasining barcha 12 ta viloyatida joylashgan 5 yulduzli zamonaviy mehmonxonalar tarmog‘i. Biz xalqaro mehmondo‘stlik andozalarini sharqona lutf va iliqlik bilan uyg‘unlashtirgan holda xizmat qilamiz.
+                    </p>
+                    <div className="space-y-2 pt-2 text-xs text-slate-300">
+                      <div className="flex items-center gap-2"><Icons.Check /> <span>12 ta viloyatda yagona 5 yulduzli standart</span></div>
+                      <div className="flex items-center gap-2"><Icons.Check /> <span>Barcha aeroportlar va temiryo‘l vokzallaridan qulay transfer</span></div>
+                      <div className="flex items-center gap-2"><Icons.Check /> <span>1200+ dan ortiq to‘liq jihozlangan lyuks xonalar</span></div>
+                      <div className="flex items-center gap-2"><Icons.Check /> <span>24/7 shaxsiy konsyerj va yuqori xavfsizlik kafolati</span></div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* Contact Section */}
+              <section id="contact" className="py-24 px-4 sm:px-8 max-w-7xl mx-auto">
+                <div className="text-center max-w-2xl mx-auto mb-14">
+                  <span className="text-xs font-bold uppercase tracking-widest text-gold-400 block mb-2">Aloqa</span>
+                  <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-3">Biz Bilan Bog‘laning</h2>
+                  <p className="text-sm text-slate-400">24/7 xizmatingizdamiz. Qo‘ng‘iroq qiling yoki xabar qoldiring.</p>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                  {/* Left Info */}
+                  <div className="p-8 rounded-3xl glass-panel border border-gold-500/30 space-y-6">
+                    <h3 className="text-xl font-serif font-bold text-white">Grand Hotel Markaziy Boshqarmasi</h3>
+                    <div className="space-y-4 text-xs text-slate-300">
+                      <div>
+                        <div className="text-gold-400 font-bold uppercase mb-0.5 flex items-center gap-1"><Icons.Phone /> Telefon raqamlari:</div>
+                        <div className="text-sm text-white font-semibold">+998 71 200 88 88 | +998 90 123 45 67</div>
+                      </div>
+                      <div>
+                        <div className="text-gold-400 font-bold uppercase mb-0.5 flex items-center gap-1"><Icons.Mail /> Elektron pochta:</div>
+                        <div className="text-sm text-white font-semibold">info@grandhotel.uz | booking@grandhotel.uz</div>
+                      </div>
+                      <div>
+                        <div className="text-gold-400 font-bold uppercase mb-0.5 flex items-center gap-1"><Icons.MapPin /> Manzil:</div>
+                        <div className="text-sm text-white font-semibold">Toshkent sh., Amir Temur shoh ko‘chasi, 88-uy</div>
+                      </div>
+                    </div>
+
+                    <a
+                      href="https://t.me/grandhotel_support"
+                      target="_blank"
+                      className="w-full py-3 px-4 rounded-xl bg-[#2AABEE]/20 hover:bg-[#2AABEE] text-[#2AABEE] hover:text-white border border-[#2AABEE]/40 font-bold text-xs transition-all flex items-center justify-center gap-2"
+                    >
+                      <Icons.Telegram />
+                      <span>Telegram orqali tezkor bog‘lanish</span>
+                    </a>
+
+                    {/* Google Map Box */}
+                    <div className="rounded-2xl overflow-hidden h-48 border border-slate-800">
+                      <iframe
+                        title="Map"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.8672535728873!2d69.27855737651034!3d41.31174987130953!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38ae8b2931f41001%3A0xf0398123ae4268e!2sAmir%20Temur%20Avenue%2C%20Tashkent!5e0!3m2!1sen!2suz!4v1715000000000!5m2!1sen!2suz"
+                        width="100%"
+                        height="100%"
+                        style={{ border: 0 }}
+                        loading="lazy"
+                      ></iframe>
+                    </div>
+                  </div>
+
+                  {/* Right Form */}
+                  <div className="p-8 rounded-3xl glass-panel border border-gold-500/30">
+                    <h3 className="text-xl font-serif font-bold text-white mb-2">Xabar Yuborish</h3>
+                    <p className="text-xs text-slate-400 mb-6">Savol yoki taklifingizni qoldiring, 15 daqiqada javob beramiz.</p>
+                    
+                    <form onSubmit={(e) => {
+                      e.preventDefault();
+                      const n = e.target.elements.name.value;
+                      const p = e.target.elements.phone.value;
+                      const m = e.target.elements.msg.value;
+                      if (!n || !p || !m) { alert('Barcha maydonlarni to‘ldiring'); return; }
+                      setContacts(prev => [{ id: Date.now(), name: n, phone: p, message: m, created_at: new Date().toISOString() }, ...prev]);
+                      showToast('Xabaringiz qabul qilindi! Rahmat.', 'success');
+                      e.target.reset();
+                    }} className="space-y-4">
+                      <div>
+                        <label className="text-xs font-semibold text-slate-300 block mb-1">Ismingiz *</label>
+                        <input name="name" type="text" placeholder="Jamshid Aliyev" className="w-full px-4 py-2.5 rounded-xl bg-navy-950 border border-slate-700 text-xs text-white focus:outline-none focus:border-gold-500" required />
+                      </div>
+                      <div>
+                        <label className="text-xs font-semibold text-slate-300 block mb-1">Telefon raqamingiz *</label>
+                        <input name="phone" type="tel" defaultValue="+998 " className="w-full px-4 py-2.5 rounded-xl bg-navy-950 border border-slate-700 text-xs text-white focus:outline-none focus:border-gold-500" required />
+                      </div>
+                      <div>
+                        <label className="text-xs font-semibold text-slate-300 block mb-1">Xabar matni *</label>
+                        <textarea name="msg" rows="3" placeholder="Xabaringizni yozing..." className="w-full px-4 py-2.5 rounded-xl bg-navy-950 border border-slate-700 text-xs text-white focus:outline-none focus:border-gold-500" required></textarea>
+                      </div>
+                      <button type="submit" className="w-full py-3 rounded-xl gold-gradient-bg text-navy-950 font-bold text-xs shadow-gold-glow">
+                        Xabarni yuborish
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </section>
+
+              {/* Footer */}
+              <footer className="bg-navy-950 border-t border-gold-500/20 py-10 px-4 sm:px-8 text-center text-xs text-slate-400">
+                <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="flex items-center gap-2">
+                    <span className="font-serif font-bold text-white text-base">GRAND HOTEL</span>
+                    <span>• 12 Viloyat Tarmog‘i • 2026</span>
+                  </div>
+                  <div>© 2026 Grand Hotel O‘zbekiston. Barcha huquqlar himoyalangan.</div>
+                  <button onClick={() => setIsAdminLoginOpen(true)} className="text-slate-500 hover:text-gold-400 flex items-center gap-1">
+                    <Icons.Shield />
+                    <span>Administrator Paneli</span>
+                  </button>
+                </div>
+              </footer>
+
+            </main>
+          )}
+
+          {/* Booking Modal with 12 Viloyat Selector */}
+          {isBookingOpen && (
+            <BookingModalView
+              rooms={rooms}
+              branches={BRANCHES}
+              initialData={bookingInitialData}
+              onClose={() => setIsBookingOpen(false)}
+              onSuccess={handleCreateBooking}
+            />
+          )}
+
+          {/* Admin Login Modal */}
+          {isAdminLoginOpen && (
+            <AdminLoginModalView
+              onClose={() => setIsAdminLoginOpen(false)}
+              onSuccess={() => {
+                setIsAdminAuthenticated(true);
+                localStorage.setItem('gh_admin_session', 'true');
+                setIsAdminLoginOpen(false);
+                setView('admin');
+                showToast('Administrator sifatida muvaffaqiyatli kirdingiz!', 'success');
+              }}
+            />
+          )}
+
+          {/* Toast Notification */}
+          {toast && (
+            <div className="fixed bottom-6 right-6 z-50 p-4 rounded-xl bg-navy-900 border border-gold-500 text-white shadow-2xl text-xs font-semibold flex items-center gap-2">
+              <Icons.CheckCircle />
+              <span>{toast.message}</span>
+            </div>
+          )}
+
+        </div>
+      );
+    }
+
+    // Booking Modal Component with Viloyat Branch Selection
+    function BookingModalView({ rooms, branches, initialData, onClose, onSuccess }) {
+      const [branchId, setBranchId] = useState(initialData?.branchId || branches[0].id);
+      const [name, setName] = useState('');
+      const [phone, setPhone] = useState('+998 ');
+      const [cin, setCin] = useState(initialData?.checkIn || new Date().toISOString().split('T')[0]);
+      const [cout, setCout] = useState(initialData?.checkOut || new Date(Date.now() + 86400000).toISOString().split('T')[0]);
+      const [guests, setGuests] = useState(initialData?.guestsCount || '2');
+      const [roomId, setRoomId] = useState(initialData?.id || rooms[0]?.id || 1);
+      const [confirmed, setConfirmed] = useState(null);
+      const [error, setError] = useState('');
+
+      const selRoom = rooms.find(r => r.id === parseInt(roomId)) || rooms[0];
+      const selBranch = branches.find(b => b.id === branchId) || branches[0];
+
+      // Nights & Price Calc
+      let nights = 0;
+      let total = 0;
+      if (cin && cout) {
+        const d1 = new Date(cin);
+        const d2 = new Date(cout);
+        if (d2 > d1) {
+          nights = Math.ceil((d2 - d1) / 86400000);
+          total = nights * selRoom.price_per_night;
+        }
+      }
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        setError('');
+
+        if (!name.trim()) { setError('Ism va familiyangizni kiriting.'); return; }
+        if (!phone.trim() || phone.trim() === '+998') { setError('Telefon raqamingizni kiriting.'); return; }
+        if (!cin || !cout) { setError('Sanalarni tanlang.'); return; }
+        
+        const d1 = new Date(cin);
+        const d2 = new Date(cout);
+        if (d1 >= d2) {
+          setError('Kirish sanasi chiqish sanasidan oldin bo‘lishi shart!');
+          return;
+        }
+        if (parseInt(guests) > selRoom.capacity) {
+          setError(`${selRoom.name} sig‘imi maksimal ${selRoom.capacity} kishi!`);
+          return;
+        }
+
+        const booking = {
+          id: Date.now(),
+          booking_code: 'GH-' + Math.floor(10000 + Math.random() * 90000),
+          branch_name: selBranch.name,
+          branch_city: selBranch.city,
+          room_name: selRoom.name,
+          guest_name: name.trim(),
+          guest_phone: phone.trim(),
+          check_in: cin,
+          check_out: cout,
+          nights,
+          guests_count: parseInt(guests),
+          price_per_night: selRoom.price_per_night,
+          total_price: total,
+          status: 'kutilmoqda'
+        };
+
+        setConfirmed(booking);
+        onSuccess(booking);
+      };
+
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/80 backdrop-blur-md overflow-y-auto">
+          <div className="relative w-full max-w-lg bg-navy-900 border border-gold-500/30 rounded-3xl p-6 shadow-2xl my-6">
+            <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">✕</button>
+
+            {confirmed ? (
+              <div className="text-center space-y-4">
+                <div className="w-14 h-14 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto">
+                  <Icons.CheckCircle className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-serif font-bold text-white">Xona Band Qilindi!</h3>
+                <p className="text-xs text-slate-300">Hurmatli <strong className="text-gold-400">{confirmed.guest_name}</strong>, buyurtmangiz qabul qilindi.</p>
+                <div className="p-4 rounded-xl bg-navy-950 border border-gold-500/20 text-left text-xs space-y-2">
+                  <div className="flex justify-between"><span>Buyurtma ID:</span><span className="font-mono font-bold text-gold-400">{confirmed.booking_code}</span></div>
+                  <div className="flex justify-between"><span>Filial:</span><span className="font-semibold text-white">{confirmed.branch_name}</span></div>
+                  <div className="flex justify-between"><span>Xona:</span><span className="font-semibold text-white">{confirmed.room_name}</span></div>
+                  <div className="flex justify-between"><span>Muddat:</span><span>{confirmed.check_in} — {confirmed.check_out} ({confirmed.nights} kecha)</span></div>
+                  <div className="flex justify-between pt-2 border-t border-slate-800 text-sm font-bold"><span>Jami summa:</span><span className="text-gold-400 text-base">${confirmed.total_price}</span></div>
+                </div>
+                <button onClick={onClose} className="w-full py-3 rounded-xl gold-gradient-bg text-navy-950 font-bold text-xs">Yopish</button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-3.5">
+                <h3 className="text-xl font-serif font-bold text-white mb-1">Xona band qilish</h3>
+                <p className="text-xs text-slate-400 mb-2">O‘zbekiston bo‘ylab 12 ta viloyat filiallaridan birini tanlang</p>
+
+                {error && <div className="p-2.5 rounded-lg bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs">{error}</div>}
+
+                {/* Branch Selection */}
+                <div>
+                  <label className="text-[11px] font-bold text-slate-300 block mb-1 flex items-center gap-1"><Icons.Building /> Mehmonxona filiali / Viloyat *</label>
+                  <select value={branchId} onChange={e => setBranchId(e.target.value)} className="w-full px-3 py-2 rounded-xl bg-navy-950 border border-slate-700 text-xs text-white">
+                    {branches.map(b => (
+                      <option key={b.id} value={b.id} className="bg-navy-900">{b.city} — {b.name} ({b.region})</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-bold text-slate-300 block mb-1">Ism va familiya *</label>
+                  <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Jamshid Aliyev" className="w-full px-3 py-2 rounded-xl bg-navy-950 border border-slate-700 text-xs text-white" required />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-bold text-slate-300 block mb-1">Telefon raqam *</label>
+                  <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} className="w-full px-3 py-2 rounded-xl bg-navy-950 border border-slate-700 text-xs text-white" required />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-bold text-slate-300 block mb-1">Xona turi *</label>
+                  <select value={roomId} onChange={e => setRoomId(e.target.value)} className="w-full px-3 py-2 rounded-xl bg-navy-950 border border-slate-700 text-xs text-white">
+                    {rooms.map(r => (
+                      <option key={r.id} value={r.id} className="bg-navy-900">{r.name} — ${r.price_per_night}/k (sig‘im: {r.capacity} kishi)</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[11px] font-bold text-slate-300 block mb-1">Kirish sanasi *</label>
+                    <input type="date" value={cin} onChange={e => setCin(e.target.value)} className="w-full px-2 py-1.5 rounded-xl bg-navy-950 border border-slate-700 text-xs text-white" required />
+                  </div>
+                  <div>
+                    <label className="text-[11px] font-bold text-slate-300 block mb-1">Chiqish sanasi *</label>
+                    <input type="date" value={cout} onChange={e => setCout(e.target.value)} className="w-full px-2 py-1.5 rounded-xl bg-navy-950 border border-slate-700 text-xs text-white" required />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-bold text-slate-300 block mb-1">Mehmonlar soni *</label>
+                  <select value={guests} onChange={e => setGuests(e.target.value)} className="w-full px-3 py-2 rounded-xl bg-navy-950 border border-slate-700 text-xs text-white">
+                    {[1, 2, 3, 4, 5].map(n => <option key={n} value={n} className="bg-navy-900">{n} nafar</option>)}
+                  </select>
+                </div>
+
+                <div className="p-3 rounded-xl bg-navy-950 border border-gold-500/30 flex justify-between items-center text-xs">
+                  <div>
+                    <div className="text-slate-400">{nights > 0 ? `${nights} kecha × $${selRoom.price_per_night} (${selBranch.city})` : 'Sana xato'}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-[10px] text-slate-400">Jami:</div>
+                    <div className="text-xl font-bold font-serif gold-gradient-text">${total}</div>
+                  </div>
+                </div>
+
+                <button type="submit" className="w-full py-3 rounded-xl gold-gradient-bg text-navy-950 font-bold text-xs shadow-gold-glow">
+                  Band qilishni tasdiqlash (${total})
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // Admin Login Modal
+    function AdminLoginModalView({ onClose, onSuccess }) {
+      const [u, setU] = useState('admin');
+      const [p, setP] = useState('grand2026');
+      const [err, setErr] = useState('');
+
+      const handleLogin = (e) => {
+        e.preventDefault();
+        if (u === 'admin' && p === 'grand2026') {
+          onSuccess();
+        } else {
+          setErr('Login yoki parol noto‘g‘ri! (Standart: admin / grand2026)');
+        }
+      };
+
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/80 backdrop-blur-md">
+          <div className="relative w-full max-w-sm bg-navy-900 border border-gold-500/30 rounded-3xl p-6 shadow-2xl">
+            <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-white">✕</button>
+            <h3 className="text-lg font-serif font-bold text-white mb-2">Administrator Kirishi</h3>
+            <p className="text-xs text-gold-400 mb-4">Standart: admin / grand2026</p>
+            {err && <div className="p-2 bg-rose-500/20 text-rose-300 text-xs rounded mb-3">{err}</div>}
+            <form onSubmit={handleLogin} className="space-y-3">
+              <div>
+                <label className="text-xs text-slate-300 block mb-1">Login</label>
+                <input value={u} onChange={e => setU(e.target.value)} className="w-full px-3 py-2 bg-navy-950 border border-slate-700 rounded-xl text-xs text-white" />
+              </div>
+              <div>
+                <label className="text-xs text-slate-300 block mb-1">Parol</label>
+                <input type="password" value={p} onChange={e => setP(e.target.value)} className="w-full px-3 py-2 bg-navy-950 border border-slate-700 rounded-xl text-xs text-white" />
+              </div>
+              <button type="submit" className="w-full py-2.5 rounded-xl gold-gradient-bg text-navy-950 font-bold text-xs shadow-gold-glow">
+                Kirish
+              </button>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    // Admin Dashboard View
+    function AdminView({ bookings, setBookings, rooms, setRooms, contacts, onBack, onLogout, showToast }) {
+      const [tab, setTab] = useState('bookings');
+      const totalRevenue = bookings.filter(b => b.status === 'tasdiqlangan').reduce((acc, b) => acc + (b.total_price || 0), 0);
+
+      const updateStatus = (id, st) => {
+        setBookings(prev => prev.map(b => b.id === id ? { ...b, status: st } : b));
+        showToast(`Holat "${st}" ga o‘zgartirildi`, 'success');
+      };
+
+      const deleteBooking = (id) => {
+        if (!confirm("O‘chirmoqchimisiz?")) return;
+        setBookings(prev => prev.filter(b => b.id !== id));
+        showToast("O‘chirildi", 'info');
+      };
+
+      return (
+        <div className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-8 space-y-6 pt-20">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+            <div className="flex items-center gap-3">
+              <button onClick={onBack} className="px-3 py-1.5 rounded-lg bg-navy-800 text-xs font-bold text-gold-400">
+                ← Saytga qaytish
+              </button>
+              <h2 className="text-xl font-serif font-bold text-white">Admin Boshqaruv Paneli (12 Viloyat)</h2>
+            </div>
+            <button onClick={onLogout} className="px-3 py-1.5 rounded-lg bg-rose-500/20 text-rose-300 text-xs font-bold">
+              Chiqish
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div className="p-4 rounded-xl glass-panel border border-gold-500/20">
+              <div className="text-xs text-slate-400">Jami Buyurtmalar</div>
+              <div className="text-2xl font-serif font-bold text-white mt-1">{bookings.length}</div>
+            </div>
+            <div className="p-4 rounded-xl glass-panel border border-gold-500/20">
+              <div className="text-xs text-slate-400">Jami Tushum</div>
+              <div className="text-2xl font-serif font-bold gold-gradient-text mt-1">${totalRevenue}</div>
+            </div>
+            <div className="p-4 rounded-xl glass-panel border border-gold-500/20">
+              <div className="text-xs text-slate-400">Kutilayotganlar</div>
+              <div className="text-2xl font-serif font-bold text-amber-400 mt-1">{bookings.filter(b => b.status === 'kutilmoqda').length}</div>
+            </div>
+            <div className="p-4 rounded-xl glass-panel border border-gold-500/20">
+              <div className="text-xs text-slate-400">Bandlik darajasi</div>
+              <div className="text-2xl font-serif font-bold text-emerald-400 mt-1">88%</div>
+            </div>
+          </div>
+
+          <div className="flex gap-2">
+            <button onClick={() => setTab('bookings')} className={`px-4 py-2 rounded-xl text-xs font-bold ${tab === 'bookings' ? 'gold-gradient-bg text-navy-950' : 'bg-navy-900 text-slate-300'}`}>
+              Buyurtmalar ({bookings.length})
+            </button>
+            <button onClick={() => setTab('rooms')} className={`px-4 py-2 rounded-xl text-xs font-bold ${tab === 'rooms' ? 'gold-gradient-bg text-navy-950' : 'bg-navy-900 text-slate-300'}`}>
+              Xonalar & Narxlar ({rooms.length})
+            </button>
+            <button onClick={() => setTab('contacts')} className={`px-4 py-2 rounded-xl text-xs font-bold ${tab === 'contacts' ? 'gold-gradient-bg text-navy-950' : 'bg-navy-900 text-slate-300'}`}>
+              Murojaatlar ({contacts.length})
+            </button>
+          </div>
+
+          {tab === 'bookings' && (
+            <div className="rounded-2xl overflow-x-auto glass-panel border border-gold-500/20">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-navy-900 text-slate-400 uppercase text-[10px]">
+                  <tr>
+                    <th className="p-3">ID</th>
+                    <th className="p-3">Filial</th>
+                    <th className="p-3">Mehmon</th>
+                    <th className="p-3">Xona</th>
+                    <th className="p-3">Muddat</th>
+                    <th className="p-3">Summa</th>
+                    <th className="p-3">Holat</th>
+                    <th className="p-3 text-right">Amal</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800">
+                  {bookings.map(b => (
+                    <tr key={b.id} className="hover:bg-navy-900/50">
+                      <td className="p-3 font-mono font-bold text-gold-400">{b.booking_code}</td>
+                      <td className="p-3 text-slate-300 font-medium">{b.branch_name || 'Toshkent Bosh bino'}</td>
+                      <td className="p-3 font-semibold text-white">{b.guest_name}<div className="text-[10px] text-slate-400">{b.guest_phone}</div></td>
+                      <td className="p-3 text-slate-300">{b.room_name}</td>
+                      <td className="p-3 text-slate-300">{b.check_in} — {b.check_out} ({b.nights} k)</td>
+                      <td className="p-3 font-bold text-gold-400">${b.total_price}</td>
+                      <td className="p-3">
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                          b.status === 'tasdiqlangan' ? 'bg-emerald-500/20 text-emerald-400' :
+                          b.status === 'bekor_qilingan' ? 'bg-rose-500/20 text-rose-400' :
+                          'bg-amber-500/20 text-amber-400'
+                        }`}>
+                          {b.status}
+                        </span>
+                      </td>
+                      <td className="p-3 text-right space-x-1">
+                        {b.status !== 'tasdiqlangan' && (
+                          <button onClick={() => updateStatus(b.id, 'tasdiqlangan')} className="px-2 py-1 bg-emerald-500 text-navy-950 font-bold rounded">✓</button>
+                        )}
+                        {b.status !== 'bekor_qilingan' && (
+                          <button onClick={() => updateStatus(b.id, 'bekor_qilingan')} className="px-2 py-1 bg-rose-500 text-white font-bold rounded">✕</button>
+                        )}
+                        <button onClick={() => deleteBooking(b.id)} className="px-2 py-1 bg-slate-800 text-slate-400 rounded">
+                          <Icons.Trash />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {tab === 'rooms' && (
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {rooms.map(r => (
+                <div key={r.id} className="p-4 rounded-xl glass-panel border border-slate-800 space-y-2">
+                  <img src={r.images ? r.images[0] : r.image_url} alt={r.name} className="w-full h-32 object-cover rounded-lg" />
+                  <div className="font-bold text-white text-sm">{r.name}</div>
+                  <div className="text-xs text-slate-400">{r.capacity} kishi • {r.size}</div>
+                  <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-800">
+                    <span className="font-bold text-gold-400">${r.price_per_night} / kecha</span>
+                    <button
+                      onClick={() => {
+                        const val = prompt('Yangi narxni kiriting ($):', r.price_per_night);
+                        if (val && !isNaN(val)) {
+                          setRooms(prev => prev.map(item => item.id === r.id ? { ...item, price_per_night: Number(val) } : item));
+                          showToast('Narx yangilandi', 'success');
+                        }
+                      }}
+                      className="px-2 py-0.5 bg-navy-800 text-gold-300 rounded text-[11px]"
+                    >
+                      Tahrirlash
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {tab === 'contacts' && (
+            <div className="space-y-3">
+              {contacts.length === 0 ? (
+                <div className="p-6 text-center text-slate-400 glass-panel rounded-xl">Xabarlar yo‘q</div>
+              ) : (
+                contacts.map(c => (
+                  <div key={c.id} className="p-4 rounded-xl glass-panel border border-slate-800">
+                    <div className="font-bold text-white text-sm">{c.name} ({c.phone})</div>
+                    <div className="text-xs text-slate-300 mt-1">"{c.message}"</div>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // Render Root
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<GrandHotelApp />);
+  </script>
+</body>
+</html>
