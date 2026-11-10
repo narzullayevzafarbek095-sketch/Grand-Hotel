@@ -86,3 +86,4 @@ npm run dev
 # Frontend http://localhost:3000 da ochiladi
 ```
 # mexmonlar
+# mexmonlar
